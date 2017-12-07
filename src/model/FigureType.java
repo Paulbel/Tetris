@@ -1,5 +1,5 @@
 package model;
 
 public enum FigureType {
-    ZLEFT,LINE
+    ZLEFT,LINE, SQUARE
 }

@@ -1,59 +1,85 @@
 package controller;
 
-import entity.CellState;
-import entity.Line;
 import entity.Shape;
-import entity.ZLeft;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import model.ListFigures;
 import model.ModelField;
 import view.FieldView;
+import view.LoseMsgBox;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Controller {
-    private int activState;
-    boolean canAroundShape;
     private FieldView fieldView;
     private ModelField modelField;
-    private MenuItem newGameItem;
-    private int NUMBER_VERTICAL = 15;
+    private int NUMBER_VERTICAL = 25;
     private int NUMBER_HORIZONTAL = 8;
-    private Scene scene;
     private int score;
-    private Shape shapeActiv;
-    private Stage stage;
-    private int startTime;
-    //private List<Stat>
-    private Timer timer;
-    private TimerTask timerTask;
     private JFrame gameFrame;
-    private CellState[][] states;
     private ListFigures figures;
+    private JPanel menu;
+    private JLabel scoreLabel;
 
 
+    public Controller() {
+        this.score = 0;
+        this.scoreLabel = new JLabel("Score: " + score);
+    }
+
+    public void showMenu() {
+        gameFrame = new JFrame();
+        this.gameFrame.setLayout(new FlowLayout());
+        this.gameFrame.setSize(250, 100);
+        menu = new JPanel();
+        JButton exitButton = new JButton("Exit");
+        JButton startGameButton = new JButton("Start");
+        menu.add(exitButton);
+        menu.add(startGameButton);
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        startGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameFrame.remove(menu);
+                startGame();
+            }
+        });
+        gameFrame.add(menu);
+        gameFrame.setVisible(true);
+    }
 
     public void startGame() {
-        this.fieldView = new FieldView(NUMBER_VERTICAL, NUMBER_HORIZONTAL, this);
-        shapeActiv = new ZLeft(2, 2);
-        this.modelField = new ModelField(NUMBER_VERTICAL, NUMBER_HORIZONTAL, this);
-        modelField.setShape(shapeActiv);
+        System.out.println("START");
+        gameFrame.dispose();
         gameFrame = new JFrame();
         this.gameFrame.setLayout(new FlowLayout());
         this.gameFrame.setSize(250, 400);
-        this.gameFrame.add(fieldView.getGameField());
         figures = new ListFigures(NUMBER_HORIZONTAL);
+        this.fieldView = new FieldView(NUMBER_VERTICAL, NUMBER_HORIZONTAL, this);
+        Shape shape = figures.getRandomShape();
+        this.modelField = new ModelField(NUMBER_VERTICAL, NUMBER_HORIZONTAL, this, shape);
+        this.gameFrame.add(fieldView.getGameGreed());
+        this.gameFrame.add(scoreLabel);
         this.gameFrame.setVisible(true);
+
     }
 
 
-    public void updateField() {
+    public void /*boolean*/ updateField() {
         modelField.refreshField();
         fieldView.updateColor(modelField.getFieldMatrix());
+        scoreLabel.setText(String.valueOf(score));
+/*        if (!canMove){
+            modelField.stopGame();
+        }
+        return canMove;*/
     }
 
     public void rotateShape() {
@@ -69,13 +95,27 @@ public class Controller {
 
     }
 
-    public void addScore(){
+    public void moveDownFast() {
+        modelField.moveDownFast();
+    }
+
+
+    public void addScore() {
         score++;
     }
 
-    public void nextShape(){
+    public void nextShape() {
         Shape shape = figures.getRandomShape();
         modelField.setShape(shape);
+    }
+
+    public void stopGame() {
+        modelField.stopGame();
+        gameFrame.dispose();
+        System.out.println("Stop");
+        LoseMsgBox loseMsgBox = new LoseMsgBox(this);
+        this.gameFrame = loseMsgBox.getFrame();
+        this.gameFrame.setVisible(true);
     }
 
 }

@@ -2,13 +2,8 @@ package entity;
 
 
 public abstract class Shape {
-
     protected final int SIZE = 4;
     protected Point[] points;
-
-    public int getSIZE() {
-        return SIZE;
-    }
 
     public Point[] getPoints() {
         return points;

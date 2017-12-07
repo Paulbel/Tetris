@@ -28,6 +28,8 @@ public class KeyboardListener implements KeyListener {
             case KeyEvent.VK_LEFT:
                 controller.moveLeft();
                 break;
+            case KeyEvent.VK_DOWN:
+                controller.moveDownFast();
         }
     }
 

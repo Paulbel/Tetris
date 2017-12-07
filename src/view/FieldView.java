@@ -7,7 +7,7 @@ import java.awt.*;
 
 
 public class FieldView {
-    private JPanel gameField;
+    private JPanel gameGreed;
     private int numberGUIX;
     private int numberGUIY;
     private int numberX;
@@ -17,34 +17,33 @@ public class FieldView {
 
 
     public void updateColor(CellState[][] states) {
-        gameField.removeAll();
+        gameGreed.removeAll();
         for (int xIndex = 0; xIndex < states.length; xIndex++) {
             for (int yIndex = 0; yIndex < states[xIndex].length; yIndex++) {
                 CellState state = states[xIndex][yIndex];
-                gameField.add(CellFabric.createCell(state));
+                gameGreed.add(CellFabric.createCell(state));
             }
         }
-        gameField.revalidate();
+        gameGreed.revalidate();
     }
 
     public FieldView(int x, int y, Controller controller) {
         this.controller = controller;
         this.numberGUIX = x;
         this.numberGUIY = y;
-        this.gameField = new JPanel();
-        this.gameField.setDoubleBuffered(true);
-        this.gameField.setLayout(new GridLayout(x, y));
-        this.gameField.addKeyListener(new KeyboardListener(this.controller));
-        this.gameField.setFocusable(true);
+        this.gameGreed = new JPanel();
+        this.gameGreed.setLayout(new GridLayout(x, y));
+        this.gameGreed.addKeyListener(new KeyboardListener(this.controller));
+        this.gameGreed.setFocusable(true);
 
     }
 
-    public JPanel getGameField() {
-        return gameField;
+    public JPanel getGameGreed() {
+        return gameGreed;
     }
 
-    public void setGameField(JPanel gameField) {
-        this.gameField = gameField;
+    public void setGameGreed(JPanel gameGreed) {
+        this.gameGreed = gameGreed;
     }
 
     public int getNumberGUIX() {

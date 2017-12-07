@@ -12,13 +12,6 @@ public class Point {
         this.posX = posX;
     }
 
-    @Override
-    public String toString() {
-        return "Point{" +
-                "posX=" + posX +
-                ", posY=" + posY +
-                '}';
-    }
 
     public int getPosY() {
         return posY;

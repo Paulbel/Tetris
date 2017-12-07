@@ -1,8 +1,8 @@
 package entity;
 
 public class Line extends Shape {
+    public static final int OFFSET_LEFT = 0;
     public Line(int x, int y){
-
         this.points = new Point[SIZE];
         for (int index = 0; index < points.length; index++ ){
             points[index] = new Point();
