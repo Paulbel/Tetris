@@ -5,6 +5,7 @@ import model.ListFigures;
 import model.ModelField;
 import view.FieldView;
 import view.LoseMsgBox;
+import view.ScorePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,22 +15,24 @@ import java.awt.event.ActionListener;
 public class Controller {
     private FieldView fieldView;
     private ModelField modelField;
-    private int NUMBER_VERTICAL = 25;
+    private int NUMBER_VERTICAL = 15;
     private int NUMBER_HORIZONTAL = 8;
     private int score;
     private JFrame gameFrame;
     private ListFigures figures;
     private JPanel menu;
-    private JLabel scoreLabel;
+    private ScorePanel scorePanel;
 
 
     public Controller() {
         this.score = 0;
-        this.scoreLabel = new JLabel("Score: " + score);
+        scorePanel = new ScorePanel(this.score);
+        scorePanel.setScore(this.score);
     }
 
     public void showMenu() {
         gameFrame = new JFrame();
+        gameFrame.setLocationRelativeTo(null);
         this.gameFrame.setLayout(new FlowLayout());
         this.gameFrame.setSize(250, 100);
         menu = new JPanel();
@@ -56,9 +59,10 @@ public class Controller {
     }
 
     public void startGame() {
-        System.out.println("START");
         gameFrame.dispose();
         gameFrame = new JFrame();
+        gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        gameFrame.setLocationRelativeTo(null);
         this.gameFrame.setLayout(new FlowLayout());
         this.gameFrame.setSize(250, 400);
         figures = new ListFigures(NUMBER_HORIZONTAL);
@@ -66,20 +70,17 @@ public class Controller {
         Shape shape = figures.getRandomShape();
         this.modelField = new ModelField(NUMBER_VERTICAL, NUMBER_HORIZONTAL, this, shape);
         this.gameFrame.add(fieldView.getGameGreed());
-        this.gameFrame.add(scoreLabel);
+        this.gameFrame.add(scorePanel.getPanel());
         this.gameFrame.setVisible(true);
 
     }
 
 
-    public void /*boolean*/ updateField() {
+    public void  updateField() {
         modelField.refreshField();
         fieldView.updateColor(modelField.getFieldMatrix());
-        scoreLabel.setText(String.valueOf(score));
-/*        if (!canMove){
-            modelField.stopGame();
-        }
-        return canMove;*/
+        scorePanel.setScore(this.score);
+
     }
 
     public void rotateShape() {
@@ -111,9 +112,8 @@ public class Controller {
 
     public void stopGame() {
         modelField.stopGame();
-        gameFrame.dispose();
-        System.out.println("Stop");
         LoseMsgBox loseMsgBox = new LoseMsgBox(this);
+        this.gameFrame.setVisible(false);
         this.gameFrame = loseMsgBox.getFrame();
         this.gameFrame.setVisible(true);
     }

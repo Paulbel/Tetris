@@ -13,6 +13,8 @@ public class ModelField {
     private ShapeMover shapeMover;
     private Controller controller;
     private Point[] pointsCopy;
+    private boolean gameStopped;
+    private final int CELL_POSITION_FINAL = 2;
 
     public ModelField(int numberX, int numberY, Controller controller, Shape shape) {
         this.controller = controller;
@@ -27,11 +29,13 @@ public class ModelField {
 
         shapeMover = new ShapeMover(controller);
         this.setShape(shape);
+        this.gameStopped = false;
         shapeMover.start();
     }
 
 
     public void stopGame() {
+        this.gameStopped = true;
         shapeMover.interrupt();
     }
 
@@ -47,58 +51,60 @@ public class ModelField {
 
 
     public boolean refreshField() {
-        Point[] points = this.activeShape.getPoints();
-        boolean canMoveDown = true;
+        if (!gameStopped) {
+            Point[] points = this.activeShape.getPoints();
+            boolean canBePainted = true;
 
-        for (Point point : points) {
-            int posX = point.getPosX();
-            int posY = point.getPosY();
-/*            if (posX <= 0) {
-                controller.stopGame();
-                return false;
-            }*/
-            if (posY < 0 || posY > numberY - 1) {
-                activeShape.setPoints(pointsCopy);
-                return true;
-            }
-            if (posX > fieldMatrix.length - 1 || fieldMatrix[posX][posY] == CellState.BUSY) {
-                canMoveDown = false;
-                break;
-            }
-
-
-        }
-
-        if (canMoveDown) {
-            freeField();
+            int position = points[0].getPosX();
             for (Point point : points) {
                 int posX = point.getPosX();
                 int posY = point.getPosY();
-                fieldMatrix[posX][posY] = CellState.FIGURE;
-            }
-        } else {
-            for (int xIndex = 0; xIndex < fieldMatrix.length; xIndex++) {
-                for (int yIndex = 0; yIndex < fieldMatrix[xIndex].length; yIndex++) {
-                    if (fieldMatrix[xIndex][yIndex] == CellState.FIGURE) {
-                        fieldMatrix[xIndex][yIndex] = CellState.BUSY;
-                    }
+
+                if (posY < 0 || posY > numberY - 1) {
+                    activeShape.setPoints(pointsCopy);
+                    return true;
+                }
+                if (posX > fieldMatrix.length - 1 || fieldMatrix[posX][posY] == CellState.BUSY) {
+                    canBePainted = false;
+                    break;
                 }
             }
-            freeFullRows();
-            controller.nextShape();
-            return false;
+            if (canBePainted) {
+                freeField();
+                for (Point point : points) {
+                    int posX = point.getPosX();
+                    int posY = point.getPosY();
+                    fieldMatrix[posX][posY] = CellState.FIGURE;
+                }
+            } else {
+                if (position == CELL_POSITION_FINAL) {
+                    controller.stopGame();
+                    return false;
+                }
+                for (int xIndex = 0; xIndex < fieldMatrix.length; xIndex++) {
+                    for (int yIndex = 0; yIndex < fieldMatrix[xIndex].length; yIndex++) {
+                        if (fieldMatrix[xIndex][yIndex] == CellState.FIGURE) {
+                            fieldMatrix[xIndex][yIndex] = CellState.BUSY;
+                        }
+                    }
+                }
+                freeFullRows();
+                controller.nextShape();
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void freeLine(int lineIndex) {
         for (int index = 0; index < fieldMatrix[lineIndex].length; index++) {
             fieldMatrix[lineIndex][index] = CellState.FREE;
         }
+        shapeMover.decreaseTime();
     }
 
     private void freeFullRows() {
-        int freeNumber = 0;
         for (int xIndex = 0; xIndex < fieldMatrix.length; xIndex++) {
             boolean canFree = true;
             for (int yIndex = 0; yIndex < fieldMatrix[xIndex].length; yIndex++) {

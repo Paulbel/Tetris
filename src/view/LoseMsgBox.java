@@ -12,6 +12,7 @@ public class LoseMsgBox {
 
     public LoseMsgBox(Controller controller) {
         this.frame = new JFrame();
+        this.frame.setLocationRelativeTo(null);
         this.frame.setSize(200, 100);
         frame.setLayout(new FlowLayout());
 
@@ -20,6 +21,7 @@ public class LoseMsgBox {
         tryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 controller.startGame();
             }
         });

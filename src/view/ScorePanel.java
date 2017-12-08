@@ -9,7 +9,7 @@ public class ScorePanel {
 
     public ScorePanel(int currentScore) {
         this.panel = new JPanel();
-        scoreCurrent.setText(String.valueOf(currentScore));
+        scoreCurrent = new JLabel(String.valueOf(currentScore));
         this.panel.add(scoreCurrent);
     }
 

@@ -1,9 +1,8 @@
 package entity;
 
-public class Square extends Shape {
-
-    public Square(int x, int y){
-        y = y +1;
+public class GShape extends Shape{
+    public GShape(int x, int y){
+        y= y+2;
         this.points = new Point[SIZE];
         for (int index = 0; index < points.length; index++ ){
             points[index] = new Point();
@@ -17,11 +16,7 @@ public class Square extends Shape {
         this.points[2].setPosX(x);
         this.points[2].setPosY(y-1);
 
-        this.points[3].setPosX(x+1);
-        this.points[3].setPosY(y-1);
-    }
-
-    @Override
-    public void rotate() {
+        this.points[3].setPosX(x);
+        this.points[3].setPosY(y-2);
     }
 }

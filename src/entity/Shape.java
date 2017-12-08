@@ -33,9 +33,9 @@ public abstract class Shape {
     }
 
     public void moveLeft() {
-        for (int pointIndex = 0; pointIndex < points.length; pointIndex++) {
-            int y = points[pointIndex].getPosY();
-            points[pointIndex].setPosY(y - 1);
+        for (Point point : points) {
+            int y = point.getPosY();
+            point.setPosY(y - 1);
 
         }
     }
@@ -49,12 +49,12 @@ public abstract class Shape {
 
 
     public void moveRight() {
-
-        for (int pointIndex = 0; pointIndex < points.length; pointIndex++) {
-            int y = points[pointIndex].getPosY();
-            points[pointIndex].setPosY(y + 1);
+        for (Point point : points) {
+            int y = point.getPosY();
+            point.setPosY(y + 1);
 
         }
 
     }
+
 }

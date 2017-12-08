@@ -1,9 +1,6 @@
 package model;
 
-import entity.Line;
-import entity.Shape;
-import entity.Square;
-import entity.ZLeft;
+import entity.*;
 
 import java.util.Random;
 
@@ -11,31 +8,32 @@ import java.util.Random;
 public class ListFigures {
     private int width;
     private Random randomFigure = new Random(0);
-    private FigureType[] shapeTypes = FigureType.values();
+    private ShapeType[] shapeTypes = ShapeType.values();
+    private final int START_POSITION_X = 1;
 
     public Shape getRandomShape() {
         int typeIndex = randomFigure.nextInt(shapeTypes.length);
-
-
-        FigureType type = shapeTypes[typeIndex];
-        int yPos = (int) (Math.random()*(width-1));
+        ShapeType type = shapeTypes[typeIndex];
+        int yPos = (int) (Math.random() * (width - 1));
         switch (type) {
             case LINE: {
-                return new Line(1, yPos+Line.OFFSET_LEFT);
+                return new Line(START_POSITION_X, yPos);
             }
             case ZLEFT: {
-                return  new ZLeft(1, yPos+ZLeft.OFFSET_LEFT);
+                return new ZLeft(START_POSITION_X, yPos);
             }
             case SQUARE: {
-                return  new Square(1, yPos+Square.OFFSET_LEFT);
+                return new Square(START_POSITION_X, yPos);
             }
+            case TSHAPE:
+                return new TShape(START_POSITION_X, yPos);
+            case GSHAPE:
+                return new GShape(START_POSITION_X, yPos);
         }
         return null;
     }
 
     public ListFigures(int width) {
         this.width = width;
-
-
     }
 }

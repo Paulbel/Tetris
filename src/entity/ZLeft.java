@@ -1,8 +1,9 @@
 package entity;
 
 public class ZLeft extends Shape {
-    public static final int OFFSET_LEFT = 1;
+
     public ZLeft(int x, int y){
+        y = y +1;
         this.points = new Point[SIZE];
         for (int index = 0; index < points.length; index++ ){
             points[index] = new Point();
