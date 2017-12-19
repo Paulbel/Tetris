@@ -10,7 +10,7 @@ public class ShapeMover extends Thread {
     private Controller controller;
 
     public ShapeMover(Controller controller) {
-        this.time = 400;
+        this.time = 300;
         this.controller = controller;
     }
 
